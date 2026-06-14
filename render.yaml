@@ -1,0 +1,29 @@
+databases:
+  - name: privacy-advocacy-db
+    plan: free
+    databaseName: privacy_advocacy
+    user: privacy_advocacy
+
+services:
+  - type: web
+    name: privacy-advocacy-api
+    runtime: node
+    plan: free
+    rootDir: backend
+    buildCommand: npm install
+    startCommand: node src/server.js
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: privacy-advocacy-db
+          property: connectionString
+      - key: JWT_SECRET
+        generateValue: true
+      - key: JWT_EXPIRES_IN
+        value: 7d
+      - key: CLIENT_ORIGIN
+        value: http://localhost:5173
+      - key: HIBP_API_KEY
+        sync: false
+      - key: NODE_ENV
+        value: production
