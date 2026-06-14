@@ -1,4 +1,7 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
+import { Link } from 'react-router-dom';
+import api from '../../api';
+import { useAuth } from '../../context/AuthContext';
 
 // Each category has a max of 25 points, for a total possible score of 100.
 const categories = [
@@ -155,6 +158,9 @@ function getRating(score) {
 }
 
 export default function PrivacyCheckup() {
+  const { user } = useAuth();
+  const [saveStatus, setSaveStatus] = useState('idle');
+
   const allQuestions = useMemo(
     () => categories.flatMap((cat) => cat.questions.map((q) => ({ ...q, categoryKey: cat.key, categoryTitle: cat.title }))),
     []
@@ -187,6 +193,7 @@ export default function PrivacyCheckup() {
     setStep(0);
     setAnswers({});
     setFinished(false);
+    setSaveStatus('idle');
   }
 
   const categoryScores = useMemo(() => {
@@ -204,6 +211,16 @@ export default function PrivacyCheckup() {
 
   const totalScore = Object.values(categoryScores).reduce((sum, val) => sum + val, 0);
 
+  useEffect(() => {
+    if (!finished || !user) return;
+    setSaveStatus('saving');
+    api
+      .post('/checkup', { totalScore, categoryScores })
+      .then(() => setSaveStatus('saved'))
+      .catch(() => setSaveStatus('error'));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [finished, user]);
+
   if (finished) {
     const rating = getRating(totalScore);
     const weakestCategories = categories
@@ -219,6 +236,28 @@ export default function PrivacyCheckup() {
         <div className="card mt-6 text-center">
           <div className="font-display text-6xl text-ink-900">{totalScore}<span className="text-2xl text-ink-500">/100</span></div>
           <div className={`mt-2 text-xl font-bold uppercase tracking-wide ${rating.color}`}>{rating.label}</div>
+          {user ? (
+            <p className="mt-3 text-xs text-ink-500">
+              {saveStatus === 'saving' && 'Saving your result...'}
+              {saveStatus === 'saved' && (
+                <>
+                  Saved to your{' '}
+                  <Link to="/tools/tracker" className="text-signal underline">
+                    Privacy Tracker
+                  </Link>
+                  .
+                </>
+              )}
+              {saveStatus === 'error' && 'Could not save this result — please try again later.'}
+            </p>
+          ) : (
+            <p className="mt-3 text-xs text-ink-500">
+              <Link to="/signup" className="text-signal underline">
+                Create a free account
+              </Link>{' '}
+              to save your results and track your progress over time.
+            </p>
+          )}
         </div>
 
         <div className="mt-6 grid gap-4 sm:grid-cols-2">

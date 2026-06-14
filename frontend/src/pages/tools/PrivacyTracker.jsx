@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import api from '../../api';
 import { useAuth } from '../../context/AuthContext';
 
@@ -6,6 +7,7 @@ export default function PrivacyTracker() {
   const { user } = useAuth();
   const [items, setItems] = useState([]);
   const [catalog, setCatalog] = useState([]);
+  const [checkupHistory, setCheckupHistory] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [customTitle, setCustomTitle] = useState('');
@@ -15,9 +17,14 @@ export default function PrivacyTracker() {
     setLoading(true);
     setError('');
     try {
-      const [itemsRes, catalogRes] = await Promise.all([api.get('/tracker'), api.get('/tracker/catalog')]);
+      const [itemsRes, catalogRes, checkupRes] = await Promise.all([
+        api.get('/tracker'),
+        api.get('/tracker/catalog'),
+        api.get('/checkup'),
+      ]);
       setItems(itemsRes.data.items);
       setCatalog(catalogRes.data.items);
+      setCheckupHistory(checkupRes.data.results);
     } catch (err) {
       setError(err.response?.data?.error || 'Could not load your privacy tracker.');
     } finally {
@@ -96,6 +103,43 @@ export default function PrivacyTracker() {
         <p className="mt-2 text-sm text-ink-500">
           {completedCount} of {items.length} actions completed
         </p>
+      </div>
+
+      {/* Privacy Checkup history */}
+      <div className="card mt-6">
+        <div className="flex items-center justify-between">
+          <h2 className="font-bold text-ink-900">Privacy Checkup history</h2>
+          <Link to="/tools/checkup" className="text-xs font-bold uppercase tracking-wide text-signal hover:underline">
+            Retake the quiz
+          </Link>
+        </div>
+        {checkupHistory.length === 0 ? (
+          <p className="mt-2 text-sm text-ink-500">
+            You haven't taken the Privacy Checkup yet. Take it to start tracking your score over time.
+          </p>
+        ) : (
+          <div className="mt-3 space-y-2">
+            {checkupHistory.map((result, idx) => {
+              const prev = checkupHistory[idx + 1];
+              const delta = prev ? result.total_score - prev.total_score : null;
+              return (
+                <div key={result.id} className="flex items-center justify-between border-b border-ink-100 pb-2 last:border-b-0 last:pb-0">
+                  <span className="text-sm text-ink-500">
+                    {new Date(result.created_at).toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' })}
+                  </span>
+                  <span className="flex items-center gap-2">
+                    <span className="font-display text-lg text-ink-900">{result.total_score}/100</span>
+                    {delta !== null && delta !== 0 && (
+                      <span className={`text-xs font-bold ${delta > 0 ? 'text-signal' : 'text-alarm'}`}>
+                        {delta > 0 ? `+${delta}` : delta}
+                      </span>
+                    )}
+                  </span>
+                </div>
+              );
+            })}
+          </div>
+        )}
       </div>
 
       {/* Add custom item */}

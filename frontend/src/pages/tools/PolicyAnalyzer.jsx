@@ -101,13 +101,25 @@ export default function PolicyAnalyzer() {
   const [text, setText] = useState('');
   const [result, setResult] = useState(null);
 
+  function getExcerpt(pattern, source) {
+    const match = source.match(pattern);
+    if (!match) return null;
+    const start = Math.max(0, match.index - 60);
+    const end = Math.min(source.length, match.index + match[0].length + 60);
+    const prefix = start > 0 ? '...' : '';
+    const suffix = end < source.length ? '...' : '';
+    return `${prefix}${source.slice(start, end).trim().replace(/\s+/g, ' ')}${suffix}`;
+  }
+
   function analyze() {
     if (!text.trim()) {
       setResult(null);
       return;
     }
 
-    const flags = rules.filter((rule) => rule.pattern.test(text));
+    const flags = rules
+      .filter((rule) => rule.pattern.test(text))
+      .map((rule) => ({ ...rule, excerpt: getExcerpt(rule.pattern, text) }));
     const positives = goodSigns.filter((sign) => sign.pattern.test(text));
     const score = Math.min(100, flags.reduce((sum, f) => sum + f.weight, 0));
 
@@ -179,6 +191,11 @@ export default function PolicyAnalyzer() {
                       <span className="pill bg-alarm-light text-alarm">+{flag.weight}</span>
                     </div>
                     <p className="mt-1 text-sm text-ink-500">{flag.explanation}</p>
+                    {flag.excerpt && (
+                      <p className="mt-2 rounded-md bg-paper-200 p-2 text-xs italic text-ink-700">
+                        "{flag.excerpt}"
+                      </p>
+                    )}
                   </div>
                 ))}
               </div>

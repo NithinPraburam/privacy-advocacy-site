@@ -43,3 +43,14 @@ CREATE TABLE IF NOT EXISTS demo_breaches (
 );
 
 CREATE INDEX IF NOT EXISTS idx_demo_breaches_email ON demo_breaches(email);
+
+-- A user's saved Privacy Checkup results, so progress can be tracked over time
+CREATE TABLE IF NOT EXISTS checkup_results (
+  id SERIAL PRIMARY KEY,
+  user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  total_score INTEGER NOT NULL,
+  category_scores JSONB NOT NULL,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE INDEX IF NOT EXISTS idx_checkup_results_user_id ON checkup_results(user_id);

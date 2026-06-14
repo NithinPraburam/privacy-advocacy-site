@@ -4,6 +4,29 @@ const { requireAuth } = require('../middleware/auth');
 
 const router = express.Router();
 
+const ALLOWED_CATEGORIES = [
+  'general',
+  'social media',
+  'browser',
+  'devices',
+  'apps',
+  'data brokers',
+  'accounts',
+];
+
+function validateItemFields({ title, description, category }) {
+  if (title !== undefined && (typeof title !== 'string' || title.trim().length === 0 || title.length > 160)) {
+    return 'Title must be between 1 and 160 characters.';
+  }
+  if (description !== undefined && description !== null && (typeof description !== 'string' || description.length > 2000)) {
+    return 'Description must be 2000 characters or fewer.';
+  }
+  if (category !== undefined && !ALLOWED_CATEGORIES.includes(category)) {
+    return `Category must be one of: ${ALLOWED_CATEGORIES.join(', ')}.`;
+  }
+  return null;
+}
+
 // Public: list suggested catalog items that users can add to their tracker
 router.get('/catalog', async (req, res) => {
   try {
@@ -38,6 +61,11 @@ router.post('/', async (req, res) => {
     return res.status(400).json({ error: 'A title is required.' });
   }
 
+  const validationError = validateItemFields({ title, description, category: category || 'general' });
+  if (validationError) {
+    return res.status(400).json({ error: validationError });
+  }
+
   try {
     const result = await pool.query(
       `INSERT INTO tracker_items (user_id, title, description, category)
@@ -54,6 +82,11 @@ router.post('/', async (req, res) => {
 router.patch('/:id', async (req, res) => {
   const { id } = req.params;
   const { completed, title, description, category } = req.body;
+
+  const validationError = validateItemFields({ title, description, category });
+  if (validationError) {
+    return res.status(400).json({ error: validationError });
+  }
 
   try {
     const existing = await pool.query('SELECT * FROM tracker_items WHERE id = $1 AND user_id = $2', [id, req.user.id]);

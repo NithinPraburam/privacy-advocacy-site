@@ -70,17 +70,17 @@ export default function Home() {
 
       {/* Stats */}
       <section className="border-b border-ink-200 bg-paper-200">
-        <div className="mx-auto max-w-6xl px-4 py-14 sm:px-6">
+        <div className="mx-auto max-w-6xl px-4 py-16 text-center sm:px-6">
           <h2 className="section-heading">The numbers don't lie</h2>
-          <div className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="mx-auto mt-12 grid grid-cols-1 divide-y divide-ink-200 sm:grid-cols-2 sm:divide-x sm:divide-y-0 lg:grid-cols-4">
             {stats.map((stat) => (
-              <div key={stat.label} className="card text-center">
-                <div className="font-display text-3xl text-signal sm:text-4xl">{stat.value}</div>
-                <p className="mt-2 text-sm text-ink-500">{stat.label}</p>
+              <div key={stat.label} className="px-6 py-6 sm:py-2">
+                <div className="font-display text-4xl text-signal sm:text-5xl">{stat.value}</div>
+                <p className="mx-auto mt-3 max-w-[14rem] text-sm leading-snug text-ink-500">{stat.label}</p>
               </div>
             ))}
           </div>
-          <p className="mt-6 text-xs text-ink-500">
+          <p className="mx-auto mt-10 max-w-2xl text-xs text-ink-500">
             Figures are illustrative estimates compiled from public breach trackers and
             industry reporting, intended to illustrate the scale of the privacy problem.
           </p>

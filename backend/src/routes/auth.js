@@ -6,6 +6,9 @@ const { requireAuth } = require('../middleware/auth');
 
 const router = express.Router();
 
+const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const BCRYPT_ROUNDS = 12;
+
 function signToken(user) {
   return jwt.sign(
     { sub: user.id, email: user.email, name: user.name },
@@ -20,6 +23,12 @@ router.post('/signup', async (req, res) => {
   if (!name || !email || !password) {
     return res.status(400).json({ error: 'Name, email, and password are required.' });
   }
+  if (!EMAIL_REGEX.test(email)) {
+    return res.status(400).json({ error: 'Please provide a valid email address.' });
+  }
+  if (name.trim().length < 2 || name.length > 120) {
+    return res.status(400).json({ error: 'Name must be between 2 and 120 characters.' });
+  }
   if (password.length < 8) {
     return res.status(400).json({ error: 'Password must be at least 8 characters long.' });
   }
@@ -30,7 +39,7 @@ router.post('/signup', async (req, res) => {
       return res.status(409).json({ error: 'An account with that email already exists.' });
     }
 
-    const passwordHash = await bcrypt.hash(password, 10);
+    const passwordHash = await bcrypt.hash(password, BCRYPT_ROUNDS);
     const result = await pool.query(
       'INSERT INTO users (name, email, password_hash) VALUES ($1, $2, $3) RETURNING id, name, email, created_at',
       [name, email.toLowerCase(), passwordHash]
