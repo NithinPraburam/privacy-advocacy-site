@@ -136,8 +136,8 @@ export default function PolicyAnalyzer() {
       <p className="pill mb-3 inline-block border border-alarm text-alarm">Policy Analyzer</p>
       <h1 className="section-heading">Decode the fine print</h1>
       <p className="mt-2 max-w-2xl text-ink-500">
-        Paste a privacy policy below. We'll scan it for common red flags — like data
-        selling, broad third-party sharing, and indefinite retention — and give you a
+        Paste a privacy policy below. We'll scan it for common red flags, like data
+        selling, broad third-party sharing, and indefinite retention, and give you a
         plain-English summary and risk rating. Everything runs in your browser; no text
         is sent anywhere.
       </p>
@@ -218,7 +218,7 @@ export default function PolicyAnalyzer() {
           {result.flags.length === 0 && (
             <p className="mt-6 text-sm text-ink-500">
               No common red-flag patterns were detected. This is a good sign, but a
-              keyword scan can't catch everything — when in doubt, read the full policy
+              keyword scan can't catch everything. When in doubt, read the full policy
               or look for an independent review.
             </p>
           )}

@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 const tools = [
   {
     title: 'Privacy Checkup',
-    description: 'A short quiz that scores your digital privacy from 0–100 across social media, browser, devices, and apps — with personalized recommendations.',
+    description: 'A short quiz that scores your digital privacy from 0–100 across social media, browser, devices, and apps, with personalized recommendations.',
     to: '/tools/checkup',
     cta: 'Take the quiz',
   },
@@ -33,7 +33,7 @@ export default function Tools() {
       <p className="pill mb-3 inline-block border border-alarm text-alarm">Tools</p>
       <h1 className="section-heading">Take action, not just notes</h1>
       <p className="mt-3 max-w-2xl text-ink-500">
-        Four free tools to help you understand and improve your privacy posture —
+        Four free tools to help you understand and improve your privacy posture,
         no account needed except for the tracker.
       </p>
 

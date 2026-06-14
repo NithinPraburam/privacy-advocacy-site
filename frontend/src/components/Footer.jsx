@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 
 const resourceLinks = [
   { label: 'Electronic Frontier Foundation (EFF)', href: 'https://www.eff.org' },
-  { label: 'ACLU — Privacy & Technology', href: 'https://www.aclu.org/issues/privacy-technology' },
+  { label: 'ACLU: Privacy & Technology', href: 'https://www.aclu.org/issues/privacy-technology' },
   { label: 'Privacy Rights Clearinghouse', href: 'https://privacyrights.org' },
   { label: 'Have I Been Pwned', href: 'https://haveibeenpwned.com' },
 ];

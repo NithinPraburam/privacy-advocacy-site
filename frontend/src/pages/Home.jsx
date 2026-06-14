@@ -54,7 +54,7 @@ export default function Home() {
           </h1>
           <p className="mt-6 max-w-2xl text-lg text-ink-700">
             ReclaimYourData is an independent, cause-driven platform that helps you
-            understand how your personal information is tracked, bought, and sold —
+            understand how your personal information is tracked, bought, and sold,
             and gives you free tools to fight back.
           </p>
           <div className="mt-8 flex flex-wrap gap-4">
@@ -119,7 +119,7 @@ export default function Home() {
           </h2>
           <p className="mx-auto mt-4 max-w-2xl text-ink-500">
             Create a free account to track your progress as you lock down your
-            digital life — and join the fight for stronger privacy laws.
+            digital life, and join the fight for stronger privacy laws.
           </p>
           <div className="mt-8 flex flex-wrap justify-center gap-4">
             <Link to="/signup" className="btn-primary">

@@ -72,7 +72,7 @@ export default function BreachChecker() {
               <h2 className="font-display text-2xl text-signal">Good news</h2>
               <p className="mt-2 text-ink-700">
                 No breaches were found for <span className="font-mono">{result.email}</span> in this database.
-                That doesn't guarantee your data has never been exposed — keep using strong, unique passwords.
+                That doesn't guarantee your data has never been exposed. Keep using strong, unique passwords.
               </p>
             </div>
           ) : (

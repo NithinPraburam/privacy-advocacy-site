@@ -248,7 +248,7 @@ export default function PrivacyCheckup() {
                   .
                 </>
               )}
-              {saveStatus === 'error' && 'Could not save this result — please try again later.'}
+              {saveStatus === 'error' && 'Could not save this result. Please try again later.'}
             </p>
           ) : (
             <p className="mt-3 text-xs text-ink-500">
@@ -278,7 +278,7 @@ export default function PrivacyCheckup() {
         <div className="mt-10">
           <h2 className="section-heading text-2xl">Recommended next steps</h2>
           <p className="mt-2 text-ink-500">
-            Based on your weakest areas — {weakestCategories.map((c) => c.title).join(' and ')} — start here:
+            Based on your weakest areas ({weakestCategories.map((c) => c.title).join(' and ')}), start here:
           </p>
           <div className="mt-4 space-y-4">
             {weakestCategories.map((cat) => (
@@ -305,13 +305,13 @@ export default function PrivacyCheckup() {
     <div className="mx-auto max-w-2xl px-4 py-12 sm:px-6">
       <p className="pill mb-3 inline-block border border-signal text-signal">Privacy Checkup</p>
       <h1 className="section-heading">How exposed are you?</h1>
-      <p className="mt-2 text-ink-500">Answer honestly — there's no judgment, only better defaults.</p>
+      <p className="mt-2 text-ink-500">Answer honestly. There's no judgment, only better defaults.</p>
 
       <div className="mt-6 h-2 w-full rounded-full bg-ink-100">
         <div className="h-2 rounded-full bg-signal transition-all" style={{ width: `${((step + 1) / total) * 100}%` }} />
       </div>
       <p className="mt-2 text-xs uppercase tracking-wide text-ink-500">
-        Question {step + 1} of {total} — {current.categoryTitle}
+        Question {step + 1} of {total}: {current.categoryTitle}
       </p>
 
       <div className="card mt-6">
